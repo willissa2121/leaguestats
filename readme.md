@@ -6,7 +6,7 @@
   <img alt="Version" src="https://img.shields.io/npm/v/lighthouse.svg">
 </p>
 
-> Periodically builds snapshots of hospital reports and delivers them via email to designated recipients.
+> Fun league stats to prove to your friend your the best at league of leggos.
 
 ## Installing
 
