@@ -29,11 +29,14 @@ $ npm run test
 ## Author
 
 👤 **Scott Willis**
+👤 **Matt Verde**
 
 ## Run on your local machine
 
 - Run NPM run start or node ./app.js
-  -To alter the players stats you want to see, change the name on line 87 of ./app.js (mark,luke,scott,matt)
+- When you run the program, it will notify you of your IP and Port your program is running on.
+- An exmaple endpoint is http://<ipAddress>:<port>/matches/<summonerName>/<numGames>/
+- So this could behttp://<ipAddress>:<port>/matches/ieatyas/15/
 
 ```
 
