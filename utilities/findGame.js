@@ -1,25 +1,25 @@
 const { config } = require("../config/config")
 const { compareDamage } = require("./comparedamage")
 const { compareGold } = require("./compareGold")
-const axios = require("axios")
-const apiKey = "RGAPI-014fc28d-a641-44f9-8bfd-e81027a5d69a"
 const { PlayerData, sumFunc } = require("./sumFunc")
-let wonOpp = 0
-let lostOpp = 0
-let bigO = {}
-const findGame = async (matchArray, name, i) => {
-  setTimeout(() => {
-    if (i < config.rateLimit + 1) {
-      //   for (var i = 0; i < matchArray.length; i++) {
-      axios
-        .get(
-          `https://na1.api.riotgames.com/lol/match/v4/matches/${matchArray[i].gameId}?api_key=${apiKey}`
-        )
-        .then(data => {
-          let particpantId
+let winOpp = 0
+let loseOpp = 0
+
+const handleGames = (matches, SummonerName) => {
+  const matchResults = matches.map((match, i) => {
+    return handleGame(match, SummonerName, i);
+  });
+  
+  return sumFunc(matchResults);
+}
+
+const handleGame = (match, SummonerName, i) => {
+  let particpantId
           let counter = 1
-          for (var j = 0; j < data.data.participantIdentities.length; j++) {
-            if (data.data.participantIdentities[j].player.accountId === name) {
+          for (var j = 0; j < match.data.participantIdentities.length; j++) {
+            let curName = String.toString(match.data.participantIdentities[j].player.summonerName).toLowerCase().split(' ').join('');
+            let sumName = String.toString(SummonerName).toLowerCase().split(' ').join('');
+            if (curName === sumName) {
               particpantId = counter
             }
             counter++
@@ -27,75 +27,67 @@ const findGame = async (matchArray, name, i) => {
           let playerRole, kda, win, team, calcKDA
 
           //--------At this point I have gotten to the single persons single game and am grabbing as many stats as I can, I have identified the role of the player to compare to the opponenet in the loop below. all functions are passed here for friendly stats
-          for (var k = 0; k < data.data.participants.length; k++) {
-            if (data.data.participants[k].participantId == particpantId) {
+          for (var k = 0; k < match.data.participants.length; k++) {
+            if (match.data.participants[k].participantId == particpantId) {
               compareDamage(
-                data.data.participants[k].stats.totalDamageDealtToChampions,
+                match.data.participants[k].stats.totalDamageDealtToChampions,
                 1,
                 i
               )
-              compareGold(data.data.participants[k], 1, i)
+              compareGold(match.data.participants[k], 1, i)
 
-              playerRole = data.data.participants[k].timeline.lane
-              kda = `${data.data.participants[k].stats.kills}/${data.data.participants[k].stats.deaths}/${data.data.participants[k].stats.assists}`
-              win = data.data.participants[k].stats.win
-              team = data.data.participants[k].teamId
+              playerRole = match.data.participants[k].timeline.lane
+              kda = `${match.data.participants[k].stats.kills}/${match.data.participants[k].stats.deaths}/${match.data.participants[k].stats.assists}`
+              win = match.data.participants[k].stats.win
+              team = match.data.participants[k].teamId
               calcKDA =
-                (data.data.participants[k].stats.kills +
-                  data.data.participants[k].stats.assists) /
-                data.data.participants[k].stats.deaths
+                (match.data.participants[k].stats.kills +
+                  match.data.participants[k].stats.assists) /
+                  match.data.participants[k].stats.deaths
             }
           }
-          let enemyKda, enemyWin, enemyCalcKDA
+          let enemyKDA, enemyWin, enemyCalcKDA
           let secondCounter = 1
           //---------Loop to find opponent who has same lane assignment, follows all same logic. All sum functions or other stat derived functions are passed in here for opponent data
-          for (var t = 0; t < data.data.participants.length; t++) {
+          for (var t = 0; t < match.data.participants.length; t++) {
             if (
-              data.data.participants[t].timeline.lane === playerRole &&
+              match.data.participants[t].timeline.lane === playerRole &&
               secondCounter !== particpantId &&
-              data.data.participants[t].teamId !== team &&
-              data.data.participants[t].timeline.lane != "NONE"
+              match.data.participants[t].teamId !== team &&
+              match.data.participants[t].timeline.lane != "NONE"
             ) {
               compareDamage(
-                data.data.participants[t].stats.totalDamageDealtToChampions,
+                match.data.participants[t].stats.totalDamageDealtToChampions,
                 0,
                 i
               )
-              compareGold(data.data.participants[t], 0, i)
-              enemyKda = `${data.data.participants[t].stats.kills}/${data.data.participants[t].stats.deaths}/${data.data.participants[t].stats.assists}`
-              enemyWin = data.data.participants[t].stats.win
+              compareGold(match.data.participants[t], 0, i)
+              enemyKDA = `${match.data.participants[t].stats.kills}/${match.data.participants[t].stats.deaths}/${match.data.participants[t].stats.assists}`
+              enemyWin = match.data.participants[t].stats.win
               enemyCalcKDA =
-                (data.data.participants[t].stats.kills +
-                  data.data.participants[t].stats.assists) /
-                data.data.participants[t].stats.deaths
+                (match.data.participants[t].stats.kills +
+                  match.data.participants[t].stats.assists) /
+                  match.data.participants[t].stats.deaths
             }
             secondCounter++
           }
 
           if (calcKDA > enemyCalcKDA && enemyCalcKDA !== undefined) {
-            wonOpp++
+            winOpp++
           } else if (enemyCalcKDA !== undefined && calcKDA < enemyCalcKDA) {
-            lostOpp++
+            loseOpp++
           }
 
-          bigO[i] = new PlayerData(
-            kda,
+          return new PlayerData(
+            {kda,
             calcKDA,
-            enemyKda,
+            enemyKDA,
             enemyCalcKDA,
-            wonOpp,
-            lostOpp
+            winOpp,
+            loseOpp}
           )
-          console.log("completed loop" + i)
-          if (i == config.rateLimit) {
-            //function that does math on values and calls console.table()
-            sumFunc(bigO)
-          }
-        })
-      i++
-      findGame(matchArray, name, i)
-    }
-  }, 100)
 }
 
-module.exports = { findGame }
+const findGame = () => {};
+
+module.exports = { findGame, handleGames }
