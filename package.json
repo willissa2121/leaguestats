@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.1"
+    "axios": "^0.19.1",
+    "express": "^4.17.1",
+    "ip": "^1.1.5"
   }
 }
