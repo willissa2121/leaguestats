@@ -1,4 +1,4 @@
-const { config } = require("../config/config")
+const  config  = require("../config/config")
 // let displayO = { team: {}, enemy: {}, sum: {}, win: {}, lose: {} }
 let displayO = {}
 let winCount = 0

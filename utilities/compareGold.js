@@ -1,5 +1,5 @@
 const displayO = {}
-const { config } = require("../config/config")
+const  config  = require("../config/config")
 let win = 0
 let lose = 0
 let oneTime = false

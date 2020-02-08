@@ -1,4 +1,4 @@
-const { config } = require("../config/config")
+const  config  = require("../config/config")
 function PlayerData(kda, calcKDA, enemyKDA, enemyCalcKDA, winOpp, loseOpp) {
   ;(this.kda = kda),
     (this.calcKDA = calcKDA),
