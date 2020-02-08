@@ -1,7 +1,6 @@
 const axios = require("axios")
-const config = require('./config/config')
-const { PlayerData, sumFunc } = require("./utilities/sumFunc")
-const { findGame } = require("./utilities/findGame")
+const config = require('../config/config')
+const { findGame } = require('../utilities/findGame')
 const friends = {
   mark: {
     summonerName: "lowridaspacesuit",
@@ -84,5 +83,3 @@ const matchHistory = async id => {
 }
 
 matchHistory(friends.scott.package.accountId)
-
-// console.table({ damage: 2, damageTaken: 10 })
