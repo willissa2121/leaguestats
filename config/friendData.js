@@ -1,5 +1,5 @@
 
-const friends = {
+module.exports = {
     mark: {
       summonerName: "lowridaspacesuit",
       package: {
