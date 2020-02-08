@@ -75,7 +75,7 @@ let bigO = {}
 const matchHistory = async id => {
   axios
     .get(
-      `https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/${id}?api_key=${config.secret}`
+      `https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/${id}?api_key=${config.leagueApiKey}`
     )
     .then(data => {
       findGame(data.data.matches, id, 0)

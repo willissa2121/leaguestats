@@ -62,5 +62,6 @@ app.listen(process.env.PORT || 3030, ip.address(), function() {
   } else {
     console.log(`serving from ${process.env.PORT}`);
     console.log(`Try hitting http://${ip.address()}:${process.env.PORT}/matches/ieatyas/15`);
+    console.log('Also make sure the league API key is up to date');
   }
 });

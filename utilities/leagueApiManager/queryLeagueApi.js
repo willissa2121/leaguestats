@@ -130,8 +130,6 @@ function getMatchInformationFromName(name, numGames) {
   });
 }
 
-getMatchInformationFromName("ieatyas");
-
 module.exports = {
   getLatestMatchesByName,
   getMatchInformationFromName,
