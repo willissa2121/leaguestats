@@ -26,7 +26,7 @@ $ npm run start
 
 - Run NPM run start or node ./app.js
 - Your console will log your current IP address along the with port being used
-- Go ahead and try hitting Try hitting http://<your IP and port>/matches/<any username>/15
+- Go ahead and try hitting Try hitting http://(your IP and port)/matches/(any username)/15
 
 ```
 
