@@ -1,14 +1,11 @@
-const config = require("../config/config")
-class PlayerData {
-  constructor(props) {
-    const {kda, calcKDA, enemyKDA, enemyCalcKDA, winOpp, loseOpp} = props;
-    this.kda = kda;
-    this.calcKDA = calcKDA;
-    this.enemyKDA = enemyKDA;
-    this.enemyCalcKDA = enemyCalcKDA;
-    this.winOpp = winOpp;
-    this.loseOpp = loseOpp
-  }
+const { config } = require("../config/config")
+function PlayerData(kda, calcKDA, enemyKDA, enemyCalcKDA, winOpp, loseOpp) {
+  ;(this.kda = kda),
+    (this.calcKDA = calcKDA),
+    (this.enemyKDA = enemyKDA),
+    (this.enemyCalcKDA = enemyCalcKDA),
+    (this.winOpp = winOpp),
+    (this.loseOpp = loseOpp)
 }
 
 const sumFunc = bigO => {
@@ -35,19 +32,17 @@ const sumFunc = bigO => {
     enemyDeaths / config.rateLimit
   ).toFixed(2)}/${(enemyAssists / config.rateLimit).toFixed(2)}`
   const averageEnemyKDA = ((enemyKills + enemyAssists) / enemyDeaths).toFixed(2)
-  bigO.push(new PlayerData(
-    {kda: finalKDA,
-    calcKDA: averageKDA,
-    enemyKDA: finalEnemyKDA,
-    enemyCalcKDA: averageEnemyKDA,
-    winOpp: bigO[bigO.length - 1].winOpp,
-    loseOpp: bigO[bigO.length - 1].loseOpp}
-  ));
+  bigO.final = new PlayerData(
+    finalKDA,
+    averageKDA,
+    finalEnemyKDA,
+    averageEnemyKDA,
+    bigO[`${config.rateLimit}`].winOpp,
+    bigO[`${config.rateLimit}`].loseOpp
+  )
 
   console.table(bigO)
-  console.log("-----------------KDA COMPARISON--------------------");
-
-  return bigO;
+  console.log("-----------------KDA COMPARISON--------------------")
 }
 
 module.exports = { PlayerData, sumFunc }
