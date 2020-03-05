@@ -46,22 +46,24 @@ app.get("/byName/:name/:games", function(req, res) {
 app.get("/matches/:name/:games", function(req, res) {
   console.log(`Getting Data for ${req.params.name}`);
   // This is returning an axios.all
-  matchHistory("dW7JJYQPl8hseDptQQ_0rRnQ5tqZhgUIZS6yGOS_6qpqJ4A")
-  const apiPromises = queryManager.getMatchInformationFromName(
-    req.params.name,
-    req.params.games
-  );
+
+  // const apiPromises = queryManager.getMatchInformationFromName(
+  //   req.params.name,
+  //   req.params.games
+  // );
   const getIdCall = queryManager.getAccountInfoByName(req.params.name);
-  getIdCall.then(data=>{
-    let idName = data.data.accountId
-    
-    // res.send({ gameStats });
-    // res.end();
-  })
+  getIdCall.then(data => {
+    let idName = data.data.accountId;
+    matchHistory(idName).then(val => {
+      setTimeout(() => {
+        res.send({ val });
+        res.end()
+      }, config.rateLimit * 175);
+    });
+  });
   // apiPromises.then(
   //   axios.spread((...matches) => {
 
-     
   //   })
   // );
 });
@@ -84,5 +86,3 @@ app.listen(process.env.PORT || 3030, ip.address(), function() {
     console.log("Also make sure the league API key is up to date");
   }
 });
-
-

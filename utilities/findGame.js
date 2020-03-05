@@ -7,32 +7,38 @@ let wonOpp = 0;
 let lostOpp = 0;
 let bigO = {};
 
-const matchHistory = async (id) => {
-  axios
-    .get(
-      `https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/${id}?api_key=${config.apiKey}`
-    )
-    .then(data => {
-      findGame(data.data.matches, id, 0);
-    }).catch(err=>{throw err});
+const matchHistory = async id => {
+  return new Promise(res => {
+    axios
+      .get(
+        `https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/${id}?api_key=${config.apiKey}`
+      )
+      .then(data => {
+        res(findGame(data.data.matches, id, 0));
+      })
+      .catch(err => {
+        throw err;
+      });
+  });
 };
 const findGame = async (matchArray, name, i) => {
-  console.log(i)
-  setTimeout(() => {
-    if (i <= config.rateLimit) {
-      //   for (var i = 0; i < matchArray.length; i++) {
-      axios
-        .get(
-          `https://na1.api.riotgames.com/lol/match/v4/matches/${matchArray[i].gameId}?api_key=${config.apiKey}`
-        )
-        .then(data => {
-          let gameStats = analyzeGame(data, i, name, matchArray);
-          if (i === config.rateLimit) {
-            gameStats;
-          }
-        });
-    }
-  }, 100);
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      if (i <= config.rateLimit) {
+        //   for (var i = 0; i < matchArray.length; i++) {
+        axios
+          .get(
+            `https://na1.api.riotgames.com/lol/match/v4/matches/${matchArray[i].gameId}?api_key=${config.apiKey}`
+          )
+          .then(data => {
+            let gameStats = analyzeGame(data, i, name, matchArray);
+            if (i === config.rateLimit) {
+              res(gameStats);
+            }
+          });
+      }
+    }, 100);
+  });
 };
 
 const analyzeGame = (data, i, name, matchArray) => {
