@@ -1,6 +1,6 @@
-const axios = require("axios")
-const config = require('../config/config')
-const { findGame } = require('../utilities/findGame')
+const { findGame } = require("../utilities/findGame");
+const config = require("../config/config");
+const axios = require("axios");
 const friends = {
   mark: {
     summonerName: "lowridaspacesuit",
@@ -55,7 +55,7 @@ const friends = {
     }
   },
   jason: {
-    summonerName: "guhoden",
+    summonerName: "guhorden",
     package: {
       profileIconId: 536,
       name: "Guhorden",
@@ -67,15 +67,15 @@ const friends = {
       revisionDate: 1578537449000
     }
   }
-}
-let wonOpp = 0
-let lostOpp = 0
-let bigO = {}
+};
+let wonOpp = 0;
+let lostOpp = 0;
+let bigO = {};
 
 const matchHistory = async id => {
   axios
     .get(
-      `https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/${id}?api_key=${config.leagueApiKey}`
+      `https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/${id}?api_key=${config.apiKey}`
     )
     .then(data => {
       findGame(data.data.matches, id, 0)

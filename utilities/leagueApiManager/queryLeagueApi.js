@@ -22,7 +22,7 @@ function handleEndpoint(endpoint, args, paramObj) {
   // the apiKey can either be a header or slapped on as a query param
   // doing it as a query param allows easy addition for more query params
   // As far as I could tell, additional query params is only needed for the 'matchByAccountId' endpoint
-  returnEndpoint += `?api_key=${config.leagueApiKey}`;
+  returnEndpoint += `?api_key=${config.apiKey}`;
 
   let paramString = "";
   if (paramObj) {

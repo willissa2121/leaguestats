@@ -61,6 +61,7 @@ const compareDamage = (damage, team, iterator) => {
       win: winCount,
       lose: loseCount
     };
+    
     const delay = ms => {
       setTimeout(() => {
         console.log("-----------------DAMAGE COMPARISON--------------------");

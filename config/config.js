@@ -1,4 +1,4 @@
 module.exports = {
-  rateLimit: 50,
-  leagueApiKey: "RGAPI-9443f31b-5660-4e25-9bfc-6b4e0587f2f5"
+  rateLimit: 15,
+  apiKey: "RGAPI-c261ce3f-1d8b-479d-a35b-de571272b42b"
 }
