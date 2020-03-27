@@ -1,4 +1,4 @@
-const { findGame } = require("../utilities/findGame");
+const { matchHistory } = require("../utilities/findGame");
 const config = require("../config/config");
 const axios = require("axios");
 const friends = {
@@ -72,14 +72,5 @@ let wonOpp = 0;
 let lostOpp = 0;
 let bigO = {};
 
-const matchHistory = async id => {
-  axios
-    .get(
-      `https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/${id}?api_key=${config.apiKey}`
-    )
-    .then(data => {
-      findGame(data.data.matches, id, 0)
-    })
-}
 
 matchHistory(friends.scott.package.accountId)

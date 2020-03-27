@@ -50,7 +50,7 @@ const sumFunc = bigO => {
   console.table(bigO);
   console.log("-----------------KDA COMPARISON--------------------");
 
-  return bigO;
+  //return bigO;
 };
 
 module.exports = { PlayerData, sumFunc };

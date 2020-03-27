@@ -3,6 +3,7 @@ const { compareDamage } = require("./comparedamage");
 const { compareGold } = require("./compareGold");
 const axios = require("axios");
 const { PlayerData, sumFunc } = require("./sumFunc");
+const { compareKda } = require("./compareKda");
 let wonOpp = 0;
 let lostOpp = 0;
 let bigO = {};
@@ -22,23 +23,21 @@ const matchHistory = async id => {
   });
 };
 const findGame = async (matchArray, name, i) => {
-  return new Promise((res, rej) => {
-    setTimeout(() => {
-      if (i <= config.rateLimit) {
-        //   for (var i = 0; i < matchArray.length; i++) {
-        axios
-          .get(
-            `https://na1.api.riotgames.com/lol/match/v4/matches/${matchArray[i].gameId}?api_key=${config.apiKey}`
-          )
-          .then(data => {
-            let gameStats = analyzeGame(data, i, name, matchArray);
-            if (i === config.rateLimit) {
-              res(gameStats);
-            }
-          });
-      }
-    }, 100);
-  });
+  setTimeout(() => {
+    if (i <= config.rateLimit) {
+      //   for (var i = 0; i < matchArray.length; i++) {
+      axios
+        .get(
+          `https://na1.api.riotgames.com/lol/match/v4/matches/${matchArray[i].gameId}?api_key=${config.apiKey}`
+        )
+        .then(data => {
+          let gameStats = analyzeGame(data, i, name, matchArray);
+          if (i === config.rateLimit) {
+            //console.log(gameStats);
+          }
+        });
+    }
+  }, 100);
 };
 
 const analyzeGame = (data, i, name, matchArray) => {
@@ -50,73 +49,75 @@ const analyzeGame = (data, i, name, matchArray) => {
     }
     counter++;
   }
-  let playerRole, kda, win, team, calcKDA;
+
+  //participant id is the number 1-10 that the summoner is assigned that game
+
+  let playerRole, kda, win,team,calcKDA
+
 
   //--------At this point I have gotten to the single persons single game and am grabbing as many stats as I can, I have identified the role of the player to compare to the opponenet in the loop below. all functions are passed here for friendly stats
+
   for (var k = 0; k < data.data.participants.length; k++) {
     if (data.data.participants[k].participantId == particpantId) {
-      compareDamage(
-        data.data.participants[k].stats.totalDamageDealtToChampions,
-        1,
-        i
-      );
-      compareGold(data.data.participants[k], 1, i);
+      const userSummoner = data.data.participants[k];
+      playerRole = userSummoner.timeline.lane;
+      compareKda(userSummoner, 1, i);
 
-      playerRole = data.data.participants[k].timeline.lane;
-      kda = `${data.data.participants[k].stats.kills}/${data.data.participants[k].stats.deaths}/${data.data.participants[k].stats.assists}`;
-      win = data.data.participants[k].stats.win;
-      team = data.data.participants[k].teamId;
+      compareDamage(userSummoner.stats.totalDamageDealtToChampions, 1, i);
+      compareGold(userSummoner, 1, i);
+
+
+      kda = `${userSummoner.stats.kills}/${userSummoner.stats.deaths}/${userSummoner.stats.assists}`;
+      win = userSummoner.stats.win;
+      team = userSummoner.teamId;
       calcKDA =
-        (data.data.participants[k].stats.kills +
-          data.data.participants[k].stats.assists) /
-        data.data.participants[k].stats.deaths;
+        (userSummoner.stats.kills + userSummoner.stats.assists) /
+        userSummoner.stats.deaths;
     }
   }
   let enemyKda, enemyWin, enemyCalcKDA;
   let secondCounter = 1;
   //---------Loop to find opponent who has same lane assignment, follows all same logic. All sum functions or other stat derived functions are passed in here for opponent data
   for (var t = 0; t < data.data.participants.length; t++) {
+    const enemySummoner = data.data.participants[t];
+
     if (
-      data.data.participants[t].timeline.lane === playerRole &&
+      enemySummoner.timeline.lane === playerRole &&
       secondCounter !== particpantId &&
-      data.data.participants[t].teamId !== team &&
-      data.data.participants[t].timeline.lane != "NONE"
+      enemySummoner.teamId !== team &&
+      enemySummoner.timeline.lane != "NONE"
     ) {
-      compareDamage(
-        data.data.participants[t].stats.totalDamageDealtToChampions,
-        0,
-        i
-      );
-      compareGold(data.data.participants[t], 0, i);
-      enemyKda = `${data.data.participants[t].stats.kills}/${data.data.participants[t].stats.deaths}/${data.data.participants[t].stats.assists}`;
-      enemyWin = data.data.participants[t].stats.win;
-      enemyCalcKDA =
-        (data.data.participants[t].stats.kills +
-          data.data.participants[t].stats.assists) /
-        data.data.participants[t].stats.deaths;
+      compareKda(enemySummoner, 0, i);
+      compareDamage(enemySummoner.stats.totalDamageDealtToChampions, 0, i);
+      compareGold(enemySummoner, 0, i);
+      // enemyKda = `${enemySummoner.stats.kills}/${enemySummoner.stats.deaths}/${enemySummoner.stats.assists}`;
+      // enemyWin = enemySummoner.stats.win;
+      // enemyCalcKDA =
+      //   (enemySummoner.stats.kills + enemySummoner.stats.assists) /
+      //   enemySummoner.stats.deaths;
     }
     secondCounter++;
   }
 
-  if (calcKDA > enemyCalcKDA && enemyCalcKDA !== undefined) {
-    wonOpp++;
-  } else if (enemyCalcKDA !== undefined && calcKDA < enemyCalcKDA) {
-    lostOpp++;
-  }
+  // if (calcKDA > enemyCalcKDA && enemyCalcKDA !== undefined) {
+  //   wonOpp++;
+  // } else if (enemyCalcKDA !== undefined && calcKDA < enemyCalcKDA) {
+  //   lostOpp++;
+  // }
 
-  bigO[i] = {
-    kda,
-    calcKDA,
-    enemyKda,
-    enemyCalcKDA,
-    wonOpp,
-    lostOpp
-  };
+  // bigO[i] = {
+  //   kda,
+  //   calcKDA,
+  //   enemyKda,
+  //   enemyCalcKDA,
+  //   wonOpp,
+  //   lostOpp
+  // };
 
   console.log("completed loop" + i);
   if (i == config.rateLimit) {
-    //function that does math on values and calls console.table()
-    return sumFunc(bigO);
+    console.log('beans')
+    //return sumFunc(bigO);
   }
   i++;
 
