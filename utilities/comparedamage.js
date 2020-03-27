@@ -13,7 +13,7 @@ const compareDamage = (damage, team, iterator) => {
     displayO[iterator].enemyDamage = damage;
   }
 
-  if (iterator === config.rateLimit + 1 && team) {
+  if (iterator === config.rateLimit && !team) {
     const keysA = Object.keys(displayO);
     for (var i = 0; i < keysA.length; i++) {
       if (

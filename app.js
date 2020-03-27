@@ -24,5 +24,4 @@ app.listen(port, ()=>{
 })
 
 
-console.log(config.scottId)
 matchHistory(config.scottId)

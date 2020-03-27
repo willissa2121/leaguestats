@@ -12,7 +12,6 @@ class PlayerData {
 }
 
 const sumFunc = bigO => {
-  console.log(bigO);
   const keysA = Object.keys(bigO);
   let kills = (deaths = assists = enemyKills = enemyDeaths = enemyAssists = 0);
   let totalKDA = (averageCalc = totalEnemyKDA = averageEnemyCalc = totalWin = totalLoss = 0);

@@ -39,8 +39,8 @@ const compareKda = (userSummoner, team, i) => {
     lostOpp
   };
   if (i === config.rateLimit) {
-    console.table(bigO)
-    //console.log(sumFunc(bigO));
+   
+   sumFunc(bigO)
   }
 };
 
