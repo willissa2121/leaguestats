@@ -1,27 +1,26 @@
-const config = require('./config/config')
+
 const express = require('express')
-const path = require("path");
-const cors = require('cors')
+const cors = require("cors");
 const app = express();
 const bodyParser = require("body-parser");
-const {matchHistory} = require('./utilities/findGame')
+const { matchHistory } = require("./src/utilities/findData");
+const routes = require("./src/router/routes");
 
-app.use(cors())
-const port = process.env.PORT || 3000
-
+app.use(cors());
+const port = process.env.PORT || 3000;
 
 //app.use(express.static(path.join(__dirname, "../", "public")));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/sendData', (req,res)=>{
-  console.log(req.body)
-})
 
-app.listen(port, ()=>{
-  console.log("started on localhost:3001")
-})
+app.use('/', routes.userSearch)
 
 
-matchHistory(config.scottId)
+
+app.listen(port, () => {
+  console.log("started on localhost:3001");
+});
+
+//matchHistory(config.scottId)

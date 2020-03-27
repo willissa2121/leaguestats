@@ -11,6 +11,8 @@ class PlayerData {
   }
 }
 
+let justOnce = true;
+
 const sumFunc = bigO => {
   const keysA = Object.keys(bigO);
   let kills = (deaths = assists = enemyKills = enemyDeaths = enemyAssists = 0);
@@ -34,20 +36,22 @@ const sumFunc = bigO => {
   const finalEnemyKDA = `${(enemyKills / config.rateLimit).toFixed(2)}/${(
     enemyDeaths / config.rateLimit
   ).toFixed(2)}/${(enemyAssists / config.rateLimit).toFixed(2)}`;
-  const averageEnemyKDA = (Number((enemyKills + enemyAssists)) / Number(enemyDeaths)).toFixed(
-    2
-  );
+  const averageEnemyKDA = (
+    Number(enemyKills + enemyAssists) / Number(enemyDeaths)
+  ).toFixed(2);
   bigO.final = {
     kda: finalKDA,
     calcKDA: averageKDA,
     enemyKda: finalEnemyKDA,
     enemyCalcKDA: averageEnemyKDA,
-    wonOpp: bigO[keysA.length - 1].winOpp,
-    lostOpp: bigO[keysA.length - 1].loseOpp
+    winOpp: bigO[keysA.length - 2].winOpp,
+    loseOpp: bigO[keysA.length - 2].loseOpp
   };
-
-  console.table(bigO);
-  console.log("-----------------KDA COMPARISON--------------------");
+  if (justOnce) {
+    console.table(bigO)
+    console.log("-----------------KDA COMPARISON--------------------");
+    justOnce = false
+  }
 
   //return bigO;
 };

@@ -1,4 +1,5 @@
 const config = require("../config/config");
+const { teamDefs } = require("./enumClass");
 const { sumFunc } = require("./sumFunc");
 
 let kda, win, team, calcKDA;
@@ -24,23 +25,25 @@ const compareKda = (userSummoner, team, i) => {
       userSummoner.stats.deaths;
   }
 
-  if (calcKDA > enemyCalcKDA && enemyCalcKDA !== undefined) {
-    wonOpp++;
-  } else if (enemyCalcKDA !== undefined && calcKDA < enemyCalcKDA) {
-    lostOpp++;
-  }
-
   bigO[i] = {
     kda,
     calcKDA,
     enemyKda,
-    enemyCalcKDA,
-    wonOpp,
-    lostOpp
+    enemyCalcKDA
   };
-  if (i === config.rateLimit) {
-   
-   sumFunc(bigO)
+  if (i === config.rateLimit && team === teamDefs.enemyTeam) {
+    const arrayOfKeys = Object.keys(bigO);
+    for (var q = 0; q < arrayOfKeys.length; q++) {
+      const dataIteration = bigO[arrayOfKeys[q]];
+      if (dataIteration.calcKDA > dataIteration.enemyCalcKDA) {
+        wonOpp++;
+      } else if (dataIteration.enemyCalcKDA > dataIteration.calcKDA) {
+        lostOpp++;
+      }
+      dataIteration.winOpp = wonOpp;
+      dataIteration.loseOpp = lostOpp;
+    }
+    return sumFunc(bigO);
   }
 };
 

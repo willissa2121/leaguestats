@@ -1,4 +1,4 @@
-const { matchHistory } = require("../utilities/findGame");
+const { matchHistory } = require("../utilities/findData");
 const config = require("../config/config");
 const axios = require("axios");
 const friends = {
