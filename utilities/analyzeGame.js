@@ -24,8 +24,9 @@ const findGame = async (matchArray, name, i) => {
 const analyzeGame = (data, i, name, matchArray) => {
   let particpantId;
   let counter = 1;
-  for (var j = 0; j < data.data.participantIdentities.length; j++) {
-    if (data.data.participantIdentities[j].player.accountId === name) {
+  const singleGamePlayers = data.data.participantIdentities
+  for (var j = 0; j < singleGamePlayers.length; j++) {
+    if (singleGamePlayers[j].player.accountId === name) {
       particpantId = counter;
     }
     counter++;
@@ -33,7 +34,7 @@ const analyzeGame = (data, i, name, matchArray) => {
 
   //participant id is the number 1-10 that the summoner is assigned that game
 
-  let playerRole, kda, win, team, calcKDA
+  let playerRole, team
 
 
   //--------At this point I have gotten to the single persons single game and am grabbing as many stats as I can, I have identified the role of the player to compare to the opponenet in the loop below. all functions are passed here for friendly stats
@@ -69,10 +70,6 @@ const analyzeGame = (data, i, name, matchArray) => {
   }
 
   console.log("completed loop" + i);
-  if (i == config.rateLimit) {
-    console.log('beans')
-    //return sumFunc(bigO);
-  }
   i++;
 
   findGame(matchArray, name, i);
