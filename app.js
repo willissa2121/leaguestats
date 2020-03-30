@@ -5,6 +5,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const { matchHistory } = require("./src/utilities/findData");
 const routes = require("./src/router/routes");
+const { Sequelize, DataTypes } = require('sequelize')
 
 app.use(cors());
 const port = process.env.PORT || 3000;

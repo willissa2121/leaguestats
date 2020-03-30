@@ -13,7 +13,7 @@ const matchHistory = async id => {
       findGame(data.data.matches, id, 0)
     })
     .catch(err => {
-      rej(err);
+      throw err;
     });
 };
 
