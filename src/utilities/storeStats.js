@@ -1,20 +1,19 @@
-const db = require('../models');
+const db = require("../models");
+const { aggregateStats } = require("./aggregateStats");
 
 const storeStats = (userSummoner, allSummoner, gameID, onlyOnce, accountID) => {
-  const {
-    goldEarned, kills, deaths, assists,
-  } = userSummoner.stats;
+  const { goldEarned, kills, deaths, assists } = userSummoner.stats;
   const champDamage = userSummoner.stats.totalDamageDealtToChampions;
   let eKills;
   let eDeaths;
   let eAssists;
   let eGoldEarned;
   let eChampDamage;
-  allSummoner.map((player) => {
+  allSummoner.map(player => {
     if (
-      player.timeline.lane === userSummoner.timeline.lane
-      && onlyOnce
-      && player.participantId !== userSummoner.participantId
+      player.timeline.lane === userSummoner.timeline.lane &&
+      onlyOnce &&
+      player.participantId !== userSummoner.participantId
     ) {
       onlyOnce = false;
       eKills = player.stats.kills;
@@ -38,14 +37,16 @@ const storeStats = (userSummoner, allSummoner, gameID, onlyOnce, accountID) => {
       goldEarned,
       eGoldEarned,
       champDamage,
-      eChampDamage,
-    },
+      eChampDamage
+    }
   }).spread((user, create) => {
     user.get({
-      plain: true,
+      plain: true
     });
 
-    console.log(create);
+    aggregateStats();
+
+    //console.log(create);
   });
 };
 
