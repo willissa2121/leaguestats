@@ -1,27 +1,24 @@
-
-const express = require('express')
+const express = require("express");
 const cors = require("cors");
 const app = express();
 const bodyParser = require("body-parser");
-const { matchHistory } = require("./src/utilities/findData");
+const db = require("./src/models");
+
 const routes = require("./src/router/routes");
-const { Sequelize, DataTypes } = require('sequelize')
 
 app.use(cors());
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 //app.use(express.static(path.join(__dirname, "../", "public")));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-app.use('/', routes.userSearch)
-
-
+app.use("/", routes.userSearch);
 
 app.listen(port, () => {
   console.log("started on localhost:3001");
 });
+db.sequelize.sync({ force: true });
 
 //matchHistory(config.scottId)

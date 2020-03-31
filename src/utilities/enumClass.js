@@ -1,6 +1,6 @@
 const teamDefs = {
-  team : true,
+  team: true,
   enemyTeam: false
-}
+};
 
-module.exports = {teamDefs}
+module.exports = { teamDefs };
