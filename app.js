@@ -19,6 +19,6 @@ app.use("/", routes.userSearch);
 app.listen(port, () => {
   console.log("started on localhost:3001");
 });
-db.sequelize.sync({ force: false });
+db.sequelize.sync({ force: true });
 
 //matchHistory(config.scottId)

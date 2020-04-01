@@ -36,7 +36,7 @@ const analyzeGame = (data, iteration, accountID, matchArray) => {
   for (var k = 0; k < data.data.participants.length; k++) {
     if (data.data.participants[k].participantId == particpantId) {
       const userSummoner = data.data.participants[k];
-      const allSummoner = data.data.participants;
+      const allSummoner = data.data
 
       storeStats(userSummoner, allSummoner, gameID, true, accountID);
     }
