@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       champDamage: { type: DataTypes.INTEGER, allowNull: false },
       eChampDamage: { type: DataTypes.INTEGER, allowNull: false },
       gameMode: { type: DataTypes.STRING, allowNull: false },
-      gameID: { type: DataTypes.BIGINT, allowNull: false }
+      gameId: { type: DataTypes.BIGINT, allowNull: false }
     },
     {
       freezeTableName: true

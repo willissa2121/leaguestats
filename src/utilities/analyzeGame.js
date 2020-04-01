@@ -21,7 +21,7 @@ const findGame = async (matchArray, name, i) => {
 };
 
 const analyzeGame = (data, iteration, accountID, matchArray) => {
-  const gameID = data.data.gameId;
+
 
   let particpantId;
   let counter = 1;
@@ -38,7 +38,7 @@ const analyzeGame = (data, iteration, accountID, matchArray) => {
       const userSummoner = data.data.participants[k];
       const allSummoner = data.data
 
-      storeStats(userSummoner, allSummoner, gameID, true, accountID);
+      storeStats(userSummoner, allSummoner, true, accountID, iteration);
     }
   }
 

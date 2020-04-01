@@ -1,9 +1,10 @@
 const db = require("../models");
 const { aggregateStats } = require("./aggregateStats");
+const config = require('../config/config')
 
-const storeStats = (userSummoner, matchData, gameID, onlyOnce, accountID) => {
+const storeStats = (userSummoner, matchData, onlyOnce, accountID, iteration) => {
   const { goldEarned, kills, deaths, assists } = userSummoner.stats;
-  const { gameMode } = matchData;
+  const { gameMode, gameId } = matchData;
   const champDamage = userSummoner.stats.totalDamageDealtToChampions;
   let eKills;
   let eDeaths;
@@ -28,7 +29,7 @@ const storeStats = (userSummoner, matchData, gameID, onlyOnce, accountID) => {
   if (gameMode === "CLASSIC") {
     db.classic_stats
       .findOrCreate({
-        where: { gameID },
+        where: { gameId },
         defaults: {
           accountID,
           kills,
@@ -48,38 +49,6 @@ const storeStats = (userSummoner, matchData, gameID, onlyOnce, accountID) => {
           plain: true
         });
 
-        //aggregateStats();
-
-        //console.log(create);
-      })
-      .catch(e => {
-        console.error(e);
-      });
-  } else {
-    db.all_stats
-      .findOrCreate({
-        where: { gameID },
-        defaults: {
-          accountID,
-          kills,
-          deaths,
-          assists,
-          eKills,
-          eDeaths,
-          eAssists,
-          goldEarned,
-          eGoldEarned,
-          champDamage,
-          eChampDamage,
-          gameMode
-        }
-      })
-      .spread((user, create) => {
-        user.get({
-          plain: true
-        });
-
-        //aggregateStats();
 
         //console.log(create);
       })
@@ -87,6 +56,38 @@ const storeStats = (userSummoner, matchData, gameID, onlyOnce, accountID) => {
         console.error(e);
       });
   }
+  db.all_stats
+    .findOrCreate({
+      where: { gameId },
+      defaults: {
+        accountID,
+        kills,
+        deaths,
+        assists,
+        eKills,
+        eDeaths,
+        eAssists,
+        goldEarned,
+        eGoldEarned,
+        champDamage,
+        eChampDamage,
+        gameMode
+      }
+    })
+    .spread((user, create) => {
+      user.get({
+        plain: true
+      });
+      if (iteration === config.rateLimit) {
+        aggregateStats();
+      }
+
+      //console.log(create);
+    })
+    .catch(e => {
+      console.error(e);
+    });
+
 };
 
 module.exports = { storeStats };
