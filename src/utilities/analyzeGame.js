@@ -1,7 +1,20 @@
 const config = require("../config/config");
-const { storeStats } = require("./storeStats");
+const { combatStats } = require("./combatStats");
 
 const axios = require("axios");
+
+const matchHistory = async id => {
+  axios
+    .get(
+      `https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/${id}?api_key=${config.apiKey}`
+    )
+    .then(data => {
+      findGame(data.data.matches, id, 0);
+    })
+    .catch(err => {
+      throw err;
+    });
+};
 
 const findGame = async (matchArray, name, i) => {
   setTimeout(() => {
@@ -21,8 +34,6 @@ const findGame = async (matchArray, name, i) => {
 };
 
 const analyzeGame = (data, iteration, accountID, matchArray) => {
-
-
   let particpantId;
   let counter = 1;
   const singleGamePlayers = data.data.participantIdentities;
@@ -36,9 +47,9 @@ const analyzeGame = (data, iteration, accountID, matchArray) => {
   for (var k = 0; k < data.data.participants.length; k++) {
     if (data.data.participants[k].participantId == particpantId) {
       const userSummoner = data.data.participants[k];
-      const allSummoner = data.data
+      const allSummoner = data.data;
 
-      storeStats(userSummoner, allSummoner, true, accountID, iteration);
+      combatStats(userSummoner, allSummoner, true, accountID, iteration);
     }
   }
 
@@ -48,4 +59,4 @@ const analyzeGame = (data, iteration, accountID, matchArray) => {
   findGame(matchArray, accountID, iteration);
 };
 
-module.exports = { findGame };
+module.exports = { matchHistory };

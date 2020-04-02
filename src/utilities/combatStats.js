@@ -1,11 +1,19 @@
 const db = require("../models");
 const { aggregateStats } = require("./aggregateStats");
-const config = require('../config/config')
+const config = require("../config/config");
 
-const storeStats = (userSummoner, matchData, onlyOnce, accountID, iteration) => {
+const combatStats = (
+  userSummoner,
+  matchData,
+  onlyOnce,
+  accountID,
+  iteration
+) => {
+  const dataPack = {};
   const { goldEarned, kills, deaths, assists } = userSummoner.stats;
   const { gameMode, gameId } = matchData;
   const champDamage = userSummoner.stats.totalDamageDealtToChampions;
+
   let eKills;
   let eDeaths;
   let eAssists;
@@ -24,6 +32,18 @@ const storeStats = (userSummoner, matchData, onlyOnce, accountID, iteration) => 
       eAssists = player.stats.assists;
       eGoldEarned = player.stats.goldEarned;
       eChampDamage = player.stats.totalDamageDealtToChampions;
+      dataPack.data = {
+        eKills,
+        eDeaths,
+        eAssists,
+        eGoldEarned,
+        eChampDamage,
+        champDamage,
+        goldEarned,
+        kills,
+        deaths,
+        assists
+      };
     }
   });
   if (gameMode === "CLASSIC") {
@@ -48,7 +68,6 @@ const storeStats = (userSummoner, matchData, onlyOnce, accountID, iteration) => 
         user.get({
           plain: true
         });
-
 
         //console.log(create);
       })
@@ -78,16 +97,10 @@ const storeStats = (userSummoner, matchData, onlyOnce, accountID, iteration) => 
       user.get({
         plain: true
       });
-      if (iteration === config.rateLimit) {
-        aggregateStats();
-      }
-
-      //console.log(create);
     })
     .catch(e => {
       console.error(e);
     });
-
 };
 
-module.exports = { storeStats };
+module.exports = { combatStats };

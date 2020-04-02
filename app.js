@@ -9,8 +9,6 @@ const routes = require("./src/router/routes");
 app.use(cors());
 const port = process.env.PORT || 3001;
 
-//app.use(express.static(path.join(__dirname, "../", "public")));
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -20,5 +18,3 @@ app.listen(port, () => {
   console.log("started on localhost:3001");
 });
 db.sequelize.sync({ force: true });
-
-//matchHistory(config.scottId)

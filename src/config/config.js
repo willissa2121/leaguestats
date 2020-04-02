@@ -1,5 +1,5 @@
 module.exports = {
-  rateLimit: 15,
-  apiKey: "RGAPI-2f05c932-6f3f-4048-80e1-897004f06a0d",
+  rateLimit: 10,
+  apiKey: "RGAPI-1c0bb82c-1e6b-4ccf-8289-3117a6afdc69",
   scottId: "IV-4Xbi8mtLh22Z5ECHqVYa2Y5vjIY3WKVws2Um7CAearkc"
 }
