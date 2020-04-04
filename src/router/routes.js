@@ -11,8 +11,9 @@ module.exports = {
     setTimeout(() => {
       console.log("penis");
       aggregateStats(value).then(data => {
-        res.json(data);
+        console.log(data);
+        //res.json(data);
       });
-    }, 1000 * config.rateLimit);
+    }, 500 * config.rateLimit);
   })
 };
