@@ -11,9 +11,7 @@ const aggregateStats = id => {
   };
   return new Promise(res => {
     db.classic_stats.findAll({ where: { accountId: id } }).then(data => {
-      // console.log(data[0].dataValues);
       data.map(value => {
-        // console.log(value.dataValues);
         const {
           kills,
           deaths,
@@ -42,10 +40,7 @@ const aggregateStats = id => {
             ? (fullDataObject.checkWinner.damage += 1)
             : (fullDataObject.checkWinner.damage += 0);
       });
-      // console.log(fullDataObject)
 
-      // const dataObj = dataPack.data;
-      // const arrayOfKeys = Object.keys(dataObj);
       const sumOfFieldsObj = {};
 
       config.valueArray.map((key, iteration) => {
