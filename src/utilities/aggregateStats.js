@@ -1,5 +1,6 @@
 const db = require("../models");
 const config = require("../config/config");
+const enumClass = require("./enumClass");
 
 const aggregateStats = id => {
   const fullDataObject = {};
@@ -81,7 +82,7 @@ const parseSums = dataPack => {
   const averagesObject = {};
   const arrayOfKeys = Object.keys(dataPack);
   arrayOfKeys.map(key => {
-    if (key === 'count') {
+    if (key === enumClass.keyVals.count) {
       averagesObject[`${key}Avg`] = dataPack[key].toFixed(2);
     } else {
       averagesObject[`${key}Avg`] = (dataPack[key] / dataPack.count).toFixed(2);
